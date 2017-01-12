@@ -10,4 +10,6 @@
 
 @interface ScrollContentView : UIView
 
+@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
+
 @end

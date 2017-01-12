@@ -13,6 +13,8 @@
 #import "HeaderView.h"
 #import "ScrollContentView.h"
 
+#import "CollectionViewDelegate.h"
+
 #define width CGRectGetWidth(self.scrollView.bounds)
 
 @interface ViewController () <UIScrollViewDelegate>
@@ -25,12 +27,26 @@
 // 你可以添加想要的视图到 scrollContentView， 比如 UICollectionView 或 UITableView 等。
 @property (strong, nonatomic) ScrollContentView *scrollContentView;
 
+@property (strong, nonatomic) CollectionViewDelegate *collectionViewDelegate;
+
 // 如果设置 scrollHeaderViewUp 为 true，则伴随着 scrollView 的向上滚动，headerView 也会一起向上滚动。
 @property (assign, nonatomic) Boolean scrollHeaderViewUp;
 
 @end
 
 @implementation ViewController
+
+#pragma mark - Properties
+
+- (CollectionViewDelegate *)collectionViewDelegate {
+    if (!_collectionViewDelegate) {
+        _collectionViewDelegate = [[CollectionViewDelegate alloc] init];
+        _collectionViewDelegate.collectionView = self.scrollContentView.collectionView;
+    }
+    return _collectionViewDelegate;
+}
+
+#pragma mark - View Controller Lifecycle
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -40,12 +56,16 @@
     NSArray *headerNibs = [[NSBundle mainBundle] loadNibNamed:@"HeaderView" owner:self options:nil];
     self.headerView = headerNibs.firstObject;
     self.headerView.frame = CGRectMake(0, 0, width, headerViewHeight);
+    
     [self.view insertSubview:self.headerView belowSubview:self.scrollView];
     
     // For content view
     NSArray *contentNibs = [[NSBundle mainBundle] loadNibNamed:@"ScrollContentView" owner:self options:nil];
     self.scrollContentView = contentNibs.firstObject;
     self.scrollContentView.frame = CGRectMake(0, headerViewHeight, width, 1000 - headerViewHeight);
+
+    [self configureContentCollectionView];
+    
     [self.scrollView addSubview:self.scrollContentView];
     
     // For scroll view stuff
@@ -55,6 +75,17 @@
     
 //    self.scrollHeaderViewUp = true;
 }
+
+
+#pragma mark - Helper
+
+- (void)configureContentCollectionView {
+    self.scrollContentView.collectionView.dataSource = self.collectionViewDelegate;
+    self.scrollContentView.collectionView.delegate = self.collectionViewDelegate;
+    
+    [self.scrollContentView.collectionView registerNib:[UINib nibWithNibName:@"CollectionViewCell" bundle:nil] forCellWithReuseIdentifier:@"CollectionViewCellID"];
+}
+
 
 #pragma mark - Scroll View Delegate
 
