@@ -48,7 +48,7 @@ static CGFloat const maxShadowAlpha = 0.5;
     [self configureHeaderView];
 
     // For header view scroll effect
-//    self.scrollHeaderViewUp = true;
+    self.scrollHeaderViewUp = true;
 }
 
 
@@ -119,12 +119,20 @@ static CGFloat const maxShadowAlpha = 0.5;
     CATransform3D headerTransform = CATransform3DIdentity;
     
     if (offsetY < 0) {  // 向下滚动
+        // header view 的缩放
         CGFloat headerScaleFactor = -(offsetY) / self.headerView.bounds.size.height;
         CGFloat headerSizevariation = ((self.headerView.bounds.size.height * (1.0 + headerScaleFactor)) - self.headerView.bounds.size.height)/2.0;
         headerTransform = CATransform3DTranslate(headerTransform, 0, headerSizevariation, 0);
         headerTransform = CATransform3DScale(headerTransform, 1.0 + headerScaleFactor, 1.0 + headerScaleFactor, 0);
         
         self.headerView.layer.transform = headerTransform;
+        
+        // !self.scrollHeaderViewUp 条件下 header view 的阴影效果
+        if (!self.scrollHeaderViewUp && self.headerView.shadowView.alpha > 0.0) {
+            headerScaleFactor = -headerScaleFactor * maxShadowAlpha;
+            CGFloat currentAlpha = self.headerView.shadowView.alpha;
+            self.headerView.shadowView.alpha = currentAlpha + headerScaleFactor;
+        }
     } else {   // 向上滚动
         if (self.scrollHeaderViewUp) {   // header view 一起滚动
             headerTransform = CATransform3DTranslate(headerTransform, 0, -offsetY, 0);
