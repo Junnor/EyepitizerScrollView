@@ -27,6 +27,10 @@
 // 如果设置 scrollHeaderViewUp 为 true，则伴随着 scrollView 的向上滚动，headerView 也会一起向上滚动。
 @property (assign, nonatomic) Boolean scrollHeaderViewUp;
 
+// 设置 status bar 不同风格
+@property (strong, nonatomic) UIView *customStatusBar;
+@property (assign, nonatomic) Boolean preferredLightStatusBar;
+
 @end
 
 
@@ -35,24 +39,56 @@
 static NSString* const clearCellId = @"ClearCellIdentifier";
 static NSString* const contentCellId = @"CollectionViewCellID";
 static CGFloat const maxShadowAlpha = 0.5;
+static CGFloat const statusBarHeight = 20;
 
 #pragma mark - View Controller Lifecycle
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    // For status bar
+    self.preferredLightStatusBar = true;
+    [self setNeedsStatusBarAppearanceUpdate];
+    
+    // For custom status bar view
+    [self configureStatusBar];
+
     // For collection view
     [self configureCollectionView];
     
     // For header view
     [self configureHeaderView];
-
+    
     // For header view scroll effect
-    self.scrollHeaderViewUp = true;
+//    self.scrollHeaderViewUp = true;
 }
 
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    return self.preferredLightStatusBar ? UIStatusBarStyleLightContent : UIStatusBarStyleDefault;
+}
 
 #pragma mark - Helper
+
+- (void)configureStatusBarWithValue:(CGFloat)value {
+    if (self.customStatusBar.hidden && value > 1.0) {
+        self.customStatusBar.hidden = false;
+        self.preferredLightStatusBar = false;
+        [self setNeedsStatusBarAppearanceUpdate];
+    }
+    if (!self.customStatusBar.hidden && value <= 1.0) {
+        self.customStatusBar.hidden = true;
+        self.preferredLightStatusBar = true;
+        [self setNeedsStatusBarAppearanceUpdate];
+    }
+}
+
+- (void)configureStatusBar {
+    CGRect frame = CGRectMake(0, 0, cellWidth, statusBarHeight);
+    self.customStatusBar = [[UIView alloc] initWithFrame:frame];
+    self.customStatusBar.backgroundColor = [UIColor whiteColor];
+    self.customStatusBar.hidden = true;
+    [self.view insertSubview:self.customStatusBar aboveSubview:self.collectionView];
+}
 
 - (void)configureHeaderView {
     NSArray *headerNibs = [[NSBundle mainBundle] loadNibNamed:@"HeaderView" owner:self options:nil];
@@ -138,11 +174,15 @@ static CGFloat const maxShadowAlpha = 0.5;
             headerTransform = CATransform3DTranslate(headerTransform, 0, -offsetY, 0);
             self.headerView.layer.transform = headerTransform;
         } else {   // 设置滚动阴影
-            CGFloat headerScaleFactor = (offsetY) / self.headerView.bounds.size.height * maxShadowAlpha;
-            if (headerScaleFactor <= maxShadowAlpha) {
-                self.headerView.shadowView.alpha = headerScaleFactor;
+            CGFloat headerFactor = (offsetY) / self.headerView.bounds.size.height * maxShadowAlpha;
+            if (headerFactor <= maxShadowAlpha) {
+                self.headerView.shadowView.alpha = headerFactor;
             }
         }
+        
+        // 设置 status bar 不同风格
+        CGFloat tmpHeaderFactor = (offsetY) / self.headerView.bounds.size.height;
+        [self configureStatusBarWithValue:tmpHeaderFactor];
     }
 }
 

@@ -340,6 +340,7 @@
 				534AA7C31E2765010030289C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
