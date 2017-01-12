@@ -18,17 +18,26 @@
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="header_bg" translatesAutoresizingMaskIntoConstraints="NO" id="13y-QI-Oj0">
                     <rect key="frame" x="0.0" y="0.0" width="403" height="227"/>
                 </imageView>
+                <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9t9-5E-qF7">
+                    <rect key="frame" x="0.0" y="0.0" width="403" height="227"/>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                </view>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
+                <constraint firstItem="9t9-5E-qF7" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="0q8-HC-fx1"/>
+                <constraint firstAttribute="bottom" secondItem="9t9-5E-qF7" secondAttribute="bottom" id="385-tp-aP9"/>
                 <constraint firstAttribute="bottom" secondItem="13y-QI-Oj0" secondAttribute="bottom" id="7FY-ya-WNT"/>
+                <constraint firstAttribute="trailing" secondItem="9t9-5E-qF7" secondAttribute="trailing" id="7Zq-C4-afw"/>
                 <constraint firstItem="13y-QI-Oj0" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Ap5-Lm-bj9"/>
                 <constraint firstItem="13y-QI-Oj0" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="NKM-ed-LKI"/>
                 <constraint firstAttribute="trailing" secondItem="13y-QI-Oj0" secondAttribute="trailing" id="OES-Xb-Dkv"/>
+                <constraint firstItem="9t9-5E-qF7" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="dmH-rN-Xc3"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
                 <outlet property="imageView" destination="13y-QI-Oj0" id="7ys-Yj-ut4"/>
+                <outlet property="shadowView" destination="9t9-5E-qF7" id="Qb0-So-Y6r"/>
             </connections>
             <point key="canvasLocation" x="48.5" y="354.5"/>
         </view>

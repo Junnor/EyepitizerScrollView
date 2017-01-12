@@ -34,7 +34,7 @@
 
 static NSString* const clearCellId = @"ClearCellIdentifier";
 static NSString* const contentCellId = @"CollectionViewCellID";
-
+static CGFloat const maxShadowAlpha = 0.5;
 
 #pragma mark - View Controller Lifecycle
 
@@ -106,9 +106,9 @@ static NSString* const contentCellId = @"CollectionViewCellID";
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.item == 0) {  // clear cell
-        NSLog(@"... It's clear collection view cell, and the item = %ld", (long)indexPath.item);
+        NSLog(@"... It's clear cell, and the item = %ld", (long)indexPath.item);
     } else {   // content cell
-        NSLog(@"### It's content view cell, and the item = %ld", (long)indexPath.item);
+        NSLog(@"### It's content cell, and the item = %ld", (long)indexPath.item);
     }
 }
 
@@ -125,10 +125,15 @@ static NSString* const contentCellId = @"CollectionViewCellID";
         headerTransform = CATransform3DScale(headerTransform, 1.0 + headerScaleFactor, 1.0 + headerScaleFactor, 0);
         
         self.headerView.layer.transform = headerTransform;
-    } else {            // 向上滚动
-        if (self.scrollHeaderViewUp) {
+    } else {   // 向上滚动
+        if (self.scrollHeaderViewUp) {   // header view 一起滚动
             headerTransform = CATransform3DTranslate(headerTransform, 0, -offsetY, 0);
             self.headerView.layer.transform = headerTransform;
+        } else {   // 设置滚动阴影
+            CGFloat headerScaleFactor = (offsetY) / self.headerView.bounds.size.height * maxShadowAlpha;
+            if (headerScaleFactor <= maxShadowAlpha) {
+                self.headerView.shadowView.alpha = headerScaleFactor;
+            }
         }
     }
 }
