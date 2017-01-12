@@ -13,8 +13,9 @@
 #import "HeaderView.h"
 #import "CollectionViewCell.h"
 
-#define width CGRectGetWidth(self.collectionView.bounds)
-#define cellHeight width * 45 / 80
+#define cellWidth CGRectGetWidth(self.collectionView.bounds)
+#define cellHeight cellWidth * 45 / 80
+
 
 @interface ViewController () <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
@@ -28,35 +29,55 @@
 
 @end
 
+
 @implementation ViewController
+
+static NSString* const clearCellId = @"ClearCellIdentifier";
+static NSString* const contentCellId = @"CollectionViewCellID";
+
 
 #pragma mark - View Controller Lifecycle
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    // For collection view
     [self configureCollectionView];
-
-    // For header view
-    NSArray *headerNibs = [[NSBundle mainBundle] loadNibNamed:@"HeaderView" owner:self options:nil];
-    self.headerView = headerNibs.firstObject;
-    self.headerView.frame = CGRectMake(0, 0, width, cellHeight);
-    [self.view insertSubview:self.headerView belowSubview:self.collectionView];
     
+    // For header view
+    [self configureHeaderView];
+
+    // For header view scroll effect
 //    self.scrollHeaderViewUp = true;
 }
 
 
 #pragma mark - Helper
 
+- (void)configureHeaderView {
+    NSArray *headerNibs = [[NSBundle mainBundle] loadNibNamed:@"HeaderView" owner:self options:nil];
+    self.headerView = headerNibs.firstObject;
+    self.headerView.frame = CGRectMake(0, 0, cellWidth, cellHeight);
+    [self.view insertSubview:self.headerView belowSubview:self.collectionView];
+}
+
 - (void)configureCollectionView {
     self.collectionView.dataSource = self;
     self.collectionView.delegate = self;
     
+    // For clear cell
     [self.collectionView registerClass:[UICollectionViewCell class]
-            forCellWithReuseIdentifier:@"ClearCellID"];
+            forCellWithReuseIdentifier:clearCellId];
+    // For content cell
     [self.collectionView registerNib:[UINib nibWithNibName:@"CollectionViewCell" bundle:nil]
-          forCellWithReuseIdentifier:@"CollectionViewCellID"];
+          forCellWithReuseIdentifier:contentCellId];
+    
+    // Set layout
+    UICollectionViewFlowLayout *layout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
+    layout.itemSize = CGSizeMake(cellWidth, cellHeight);
+    layout.minimumLineSpacing = 0;
+    layout.minimumInteritemSpacing = 0;
+    self.collectionView.collectionViewLayout = layout;
 }
 
 #pragma mark - Collection View DataSource
@@ -68,12 +89,12 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.item == 0) {
-        UICollectionViewCell *headerCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"ClearCellID"
+        UICollectionViewCell *headerCell = [collectionView dequeueReusableCellWithReuseIdentifier:clearCellId
                                                                                      forIndexPath:indexPath];
         headerCell.backgroundColor = [UIColor clearColor];
         return headerCell;
     } else {
-        CollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"CollectionViewCellID"
+        CollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:contentCellId
                                                                              forIndexPath:indexPath];
         cell.imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%ld", indexPath.item + 19]];
         cell.titleLabel.text = [NSString stringWithFormat:@"%ld", (long)indexPath.item];
@@ -83,16 +104,12 @@
 
 #pragma mark - Collection View Delegate
 
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    return CGSizeMake(width, cellHeight);
-}
-
-- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
-    return 0;
-}
-
-- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
-    return 0;
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.item == 0) {  // clear cell
+        NSLog(@"... It's clear collection view cell, and the item = %ld", (long)indexPath.item);
+    } else {   // content cell
+        NSLog(@"### It's content view cell, and the item = %ld", (long)indexPath.item);
+    }
 }
 
 #pragma mark - Scroll View Delegate
