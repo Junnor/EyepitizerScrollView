@@ -11,23 +11,17 @@
 #import "ViewController.h"
 
 #import "HeaderView.h"
-#import "ScrollContentView.h"
+#import "CollectionViewCell.h"
 
-#import "CollectionViewDelegate.h"
+#define width CGRectGetWidth(self.collectionView.bounds)
+#define cellHeight width * 45 / 80
 
-#define width CGRectGetWidth(self.scrollView.bounds)
+@interface ViewController () <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
-@interface ViewController () <UIScrollViewDelegate>
-
-@property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
+@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 
 // 在 headerView 里，你可以替换你需要设置的图片。
 @property (strong, nonatomic) HeaderView *headerView;
-
-// 你可以添加想要的视图到 scrollContentView， 比如 UICollectionView 或 UITableView 等。
-@property (strong, nonatomic) ScrollContentView *scrollContentView;
-
-@property (strong, nonatomic) CollectionViewDelegate *collectionViewDelegate;
 
 // 如果设置 scrollHeaderViewUp 为 true，则伴随着 scrollView 的向上滚动，headerView 也会一起向上滚动。
 @property (assign, nonatomic) Boolean scrollHeaderViewUp;
@@ -36,42 +30,18 @@
 
 @implementation ViewController
 
-#pragma mark - Properties
-
-- (CollectionViewDelegate *)collectionViewDelegate {
-    if (!_collectionViewDelegate) {
-        _collectionViewDelegate = [[CollectionViewDelegate alloc] init];
-        _collectionViewDelegate.collectionView = self.scrollContentView.collectionView;
-    }
-    return _collectionViewDelegate;
-}
-
 #pragma mark - View Controller Lifecycle
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    [self configureCollectionView];
+
     // For header view
-    CGFloat headerViewHeight = width * 45/80;
     NSArray *headerNibs = [[NSBundle mainBundle] loadNibNamed:@"HeaderView" owner:self options:nil];
     self.headerView = headerNibs.firstObject;
-    self.headerView.frame = CGRectMake(0, 0, width, headerViewHeight);
-    
-    [self.view insertSubview:self.headerView belowSubview:self.scrollView];
-    
-    // For content view
-    NSArray *contentNibs = [[NSBundle mainBundle] loadNibNamed:@"ScrollContentView" owner:self options:nil];
-    self.scrollContentView = contentNibs.firstObject;
-    self.scrollContentView.frame = CGRectMake(0, headerViewHeight, width, 1000 - headerViewHeight);
-
-    [self configureContentCollectionView];
-    
-    [self.scrollView addSubview:self.scrollContentView];
-    
-    // For scroll view stuff
-    self.scrollView.contentSize = CGSizeMake(width, 1000);
-    self.scrollView.delegate = self;
-    
+    self.headerView.frame = CGRectMake(0, 0, width, cellHeight);
+    [self.view insertSubview:self.headerView belowSubview:self.collectionView];
     
 //    self.scrollHeaderViewUp = true;
 }
@@ -79,13 +49,51 @@
 
 #pragma mark - Helper
 
-- (void)configureContentCollectionView {
-    self.scrollContentView.collectionView.dataSource = self.collectionViewDelegate;
-    self.scrollContentView.collectionView.delegate = self.collectionViewDelegate;
+- (void)configureCollectionView {
+    self.collectionView.dataSource = self;
+    self.collectionView.delegate = self;
     
-    [self.scrollContentView.collectionView registerNib:[UINib nibWithNibName:@"CollectionViewCell" bundle:nil] forCellWithReuseIdentifier:@"CollectionViewCellID"];
+    [self.collectionView registerClass:[UICollectionViewCell class]
+            forCellWithReuseIdentifier:@"ClearCellID"];
+    [self.collectionView registerNib:[UINib nibWithNibName:@"CollectionViewCell" bundle:nil]
+          forCellWithReuseIdentifier:@"CollectionViewCellID"];
 }
 
+#pragma mark - Collection View DataSource
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    // 1 为头部的透明Cell
+    return 8 + 1;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.item == 0) {
+        UICollectionViewCell *headerCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"ClearCellID"
+                                                                                     forIndexPath:indexPath];
+        headerCell.backgroundColor = [UIColor clearColor];
+        return headerCell;
+    } else {
+        CollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"CollectionViewCellID"
+                                                                             forIndexPath:indexPath];
+        cell.imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%ld", indexPath.item + 19]];
+        cell.titleLabel.text = [NSString stringWithFormat:@"%ld", (long)indexPath.item];
+        return cell;
+    }
+}
+
+#pragma mark - Collection View Delegate
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+    return CGSizeMake(width, cellHeight);
+}
+
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
+    return 0;
+}
+
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
+    return 0;
+}
 
 #pragma mark - Scroll View Delegate
 

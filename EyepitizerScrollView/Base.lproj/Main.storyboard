@@ -21,20 +21,37 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Per-on-mv1">
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="eag-yj-ByL">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                            </scrollView>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="4xi-cP-892">
+                                    <size key="itemSize" width="50" height="50"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="aPF-R3-YDc">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </view>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="Per-on-mv1" secondAttribute="trailing" id="MbD-fP-eIH"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="Per-on-mv1" secondAttribute="bottom" id="b8t-n8-w7V"/>
-                            <constraint firstItem="Per-on-mv1" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="uye-07-dU2"/>
-                            <constraint firstItem="Per-on-mv1" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="-20" id="wZC-KN-IVK"/>
+                            <constraint firstItem="eag-yj-ByL" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="2Uj-dU-uBb"/>
+                            <constraint firstAttribute="trailing" secondItem="eag-yj-ByL" secondAttribute="trailing" id="CFL-Zb-gOE"/>
+                            <constraint firstItem="eag-yj-ByL" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="-20" id="PBH-fk-eOk"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="eag-yj-ByL" secondAttribute="bottom" id="tqg-BM-mao"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="scrollView" destination="Per-on-mv1" id="gvL-Bw-XBq"/>
+                        <outlet property="collectionView" destination="eag-yj-ByL" id="kWL-qL-1gI"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
