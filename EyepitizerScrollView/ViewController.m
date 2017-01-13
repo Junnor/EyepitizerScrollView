@@ -154,7 +154,7 @@ static CGFloat const statusBarHeight = 20;
     CGFloat offsetY = scrollView.contentOffset.y;
     CATransform3D headerTransform = CATransform3DIdentity;
     
-    if (offsetY < 0) {  // 向下滚动
+    if (offsetY < 0) {  // offsetY < 0, 向下滚动
         // header view 的缩放
         CGFloat headerScaleFactor = -(offsetY) / self.headerView.bounds.size.height;
         CGFloat headerSizevariation = ((self.headerView.bounds.size.height * (1.0 + headerScaleFactor)) - self.headerView.bounds.size.height)/2.0;
@@ -169,7 +169,7 @@ static CGFloat const statusBarHeight = 20;
             CGFloat currentAlpha = self.headerView.shadowView.alpha;
             self.headerView.shadowView.alpha = currentAlpha + headerScaleFactor;
         }
-    } else {   // 向上滚动
+    } else {   // offsetY >= 0, 向上滚动/向上滚动
         if (self.scrollHeaderViewUp) {   // header view 一起滚动
             headerTransform = CATransform3DTranslate(headerTransform, 0, -offsetY, 0);
             self.headerView.layer.transform = headerTransform;
