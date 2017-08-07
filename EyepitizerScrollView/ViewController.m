@@ -120,7 +120,7 @@ static CGFloat const statusBarHeight = 20;
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     // 1 为头部的透明Cell
-    return 8 + 1;
+    return 6 + 1;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {

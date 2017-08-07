@@ -134,7 +134,7 @@
 				TargetAttributes = {
 					534AA7A91E2765000030289C = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = N5NQESTGE5;
+						DevelopmentTeam = V5NZ3R8346;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -301,7 +301,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = N5NQESTGE5;
+				DEVELOPMENT_TEAM = V5NZ3R8346;
 				INFOPLIST_FILE = EyepitizerScrollView/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ju.EyepitizerScrollView;
@@ -313,7 +313,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = N5NQESTGE5;
+				DEVELOPMENT_TEAM = V5NZ3R8346;
 				INFOPLIST_FILE = EyepitizerScrollView/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ju.EyepitizerScrollView;
